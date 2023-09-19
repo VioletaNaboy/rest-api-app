@@ -19,5 +19,5 @@ const addSchema = Joi.object({
 });
 
 module.exports = {
-  addSchema,
+  addSchema
 }

@@ -1,6 +1,6 @@
 const contacts = require('../models/contacts')
 
-const HttpError = require('./HttpError')
+const { HttpError } = require('../errorshandlers/index')
 
 
 const listContacts = async (req, res, next) => {
@@ -29,7 +29,7 @@ const getContactById = async (req, res, next) => {
 
 const addContact = async (req, res, next) => {
   try {
-      const data = await contacts.addContact(req.body);
+  const data = await contacts.addContact(req.body);
   const response = {
     id: data.id,
     name: req.body.name,
@@ -41,7 +41,6 @@ const addContact = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
-
 }
 
 const removeContact = async (req, res, next) => {

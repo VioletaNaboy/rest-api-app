@@ -1,4 +1,4 @@
-const { HttpError } = require('../controllers/HttpError')
+const { HttpError } = require('../errorshandlers/index')
 
 const validateData = schema => {
   const f = (req, res, next) => {
@@ -7,7 +7,7 @@ const validateData = schema => {
       return next(HttpError(400, 'missing data'));
     }
     if (error) {
-      return next(HttpError(400, error));
+      return next (HttpError(400, error));
     }
     next();
   }
