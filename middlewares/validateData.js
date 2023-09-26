@@ -25,7 +25,7 @@ return f;
 const checkId = (req, res, next) => {
   const { contactId } = req.params;
   if (!isValidObjectId(contactId)) {
-    next(HttpError(400, `${contactId} is not valid id`))
+    next(HttpError(404, `${contactId} is not valid id`))
   }
   next();
 }
