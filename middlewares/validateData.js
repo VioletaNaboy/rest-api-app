@@ -1,5 +1,5 @@
-const { HttpError } = require('../errorshandlers/index')
-const { isValidObjectId } = require('mongoose')
+const { HttpError } = require('../errorshandlers/index');
+const { isValidObjectId } = require('mongoose');
 
 const validateData = schema => {
   const f = (req, res, next) => {

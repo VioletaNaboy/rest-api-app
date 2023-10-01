@@ -2,20 +2,21 @@ const Joi = require('joi');
 
 const userSchema = Joi.object({
   email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .email({ minDomainSegments: 2, tlds: { allow: ["com"] } })
     .required()
     .messages({
       "string.email": "wrong email format",
-      "any.required": "Email is required",
+      "any.required": "missing email",
     }),
   password: Joi.string()
     .required()
     .messages({
-    "any.required": "Set password for user",
+    "any.required": "missing phone number",
     }),
 });
 
-module.exports = {
-  userSchema
-}
 
+
+module.exports = {
+ userSchema
+}
