@@ -1,6 +1,9 @@
-const Contact = require('./schemas/contact')
-const User = require('./schemas/auth')
-const { signToken } = require('./jwtService')
+const Contact = require('./schemas/contact');
+const User = require('./schemas/auth');
+const bcrypt = require('bcrypt');
+const { HttpError } = require('../errorshandlers/index');
+const { signToken } = require('./jwtService');
+const { userSchema } = require('../schemas/auth');
 
 const listContacts = async () => {
     return Contact.find()
@@ -26,22 +29,31 @@ const updateStatusContact = async (contactId, body) => {
     return Contact.findByIdAndUpdate({ _id: contactId }, body, { new: true })
 }
 
+
+const checkUserExists =  (email) => User.findOne(email);
+
 const signupUser = async (userData) => {
-  const newUser = User.create(userData);
-  newUser.password = undefined;
-  const token = signToken(newUser._id);
-
-  return { user: newUser, token };
-
+  const hashedPassword = await bcrypt.hash(userData.password, 10)
+  const newUser = await User.create({...userData, password: hashedPassword});
+  return { newUser };
 }
 
 const loginUser = async (userData) => {
-  const newUser = User.create(userData);
-  newUser.password = undefined;
-  // const token = signToken(newUser.id);
+  const user = await User.findOne({ email: userData.email }).select('+password');
+  const passwordIsValid = await bcrypt.compare(userData.password, user.password);
+  if (!passwordIsValid) {throw HttpError(401, "Unauthorized");} 
+  user.password = undefined;
+  const token = signToken(user.id);
+  await User.findByIdAndUpdate(user._id, { token });
+  return {user, token}
+}
 
-  // return { user: newUser, token };
+const logoutUser = async (id) => {
+return User.findByIdAndUpdate(id, { token: "" });
+}
 
+const updateUser = async (id, subscription) => {
+return User.findByIdAndUpdate(id, { subscription }, { new: true });
 }
 
 module.exports = {
@@ -52,5 +64,6 @@ module.exports = {
   updateContact,
   updateStatusContact,
   signupUser,
-  loginUser
+  loginUser,
+  checkUserExists, logoutUser, updateUser
 }

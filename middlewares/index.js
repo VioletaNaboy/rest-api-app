@@ -1,5 +1,6 @@
 const { validateData, checkId } = require('./validateData');
-const { checkUser } = require('./authMiddlewares')
+const { checkUser, checkUserLogin } = require('./authMiddlewares');
+const {protect} = require('./authenticateMiddlewares')
 module.exports = {
-  validateData, checkId, checkUser
+  validateData, checkId, checkUser, checkUserLogin, protect
 }

@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const userSchema = Joi.object({
   email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ["com"] } })
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required()
     .messages({
       "string.email": "wrong email format",
@@ -15,8 +15,16 @@ const userSchema = Joi.object({
     }),
 });
 
+const updateSubscriptionSchema = Joi.object({
+  subscription: Joi.string()
+    .valid(...Object.values(["starter", "pro", "business"])) 
+    .required()
+    .messages({
+    'any.required': 'missing required subscription field',
+  }),
+});
 
 
 module.exports = {
- userSchema
+ userSchema, updateSubscriptionSchema
 }
