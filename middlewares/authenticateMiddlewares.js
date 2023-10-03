@@ -8,9 +8,9 @@ const protect = async (req, res, next) => {
   try {
       const userId = checkToken(token);
       const currentUser = await User.findById(userId);
-      if (!currentUser) {
+      if (!currentUser || currentUser.token === "") {
           throw HttpError(401, 'Not authorized');
-      }
+    }
       req.user = currentUser;
       next();
   }

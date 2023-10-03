@@ -36,7 +36,7 @@ const checkUserLogin = schema => {
         
         const user = await checkUserExists({ email: value.email });
         if (!user) {
-        return next(HttpError(401, error));
+        return next(HttpError(401, 'Email or password is wrong'));
         }
         req.body = value;
         next();

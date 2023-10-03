@@ -13,7 +13,6 @@ const checkToken = token => {
     }
     try {
         const { id } = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(id)
         return id;
     }
     catch (error){

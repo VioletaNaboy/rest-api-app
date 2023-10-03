@@ -1,7 +1,7 @@
 const { signupUser, loginUser, logoutUser, updateUser } = require('../service/index');
 const signup = async (req, res, next) => {
     try {
-    const user = await signupUser(req.body);
+      const user = await signupUser(req.body);
         return res.status(201).json({
     user: {
       email: user.email,

@@ -1,21 +1,25 @@
 const Joi = require('joi');
 
-const userSchema = Joi.object({
+const addSchema = Joi.object({
+  name: Joi.string().required().messages({
+    "any.required": "missing name",
+  }),
   email: Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .email({ minDomainSegments: 2, tlds: { allow: ["com"] } })
     .required()
     .messages({
       "string.email": "wrong email format",
-      "any.required": "Email is required",
+      "any.required": "missing email",
     }),
-  password: Joi.string()
+  phone: Joi.string()
     .required()
     .messages({
-    "any.required": "Set password for user",
+    "any.required": "missing phone number",
     }),
 });
-
+const validateBodyFavorite = Joi.object({
+  favorite: Joi.boolean().required(),
+});
 module.exports = {
-  userSchema
+  addSchema, validateBodyFavorite
 }
-
