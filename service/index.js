@@ -78,6 +78,16 @@ const updateUser = async (id, subscription) => {
 return User.findByIdAndUpdate(id, { subscription }, { new: true });
 }
 
+const updateUserAvatar = async (userData, user, file) => {
+  if (file) {
+   user.avatar = file.path.replace('public/avatar', '')
+  }
+  
+  Object.keys(userData).forEach((key) => { user[key] = userData[key] });
+  
+  return user.save();
+}
+
 module.exports = {
   listContacts,
   getContactById,
@@ -87,5 +97,5 @@ module.exports = {
   updateStatusContact,
   signupUser,
   loginUser,
-  checkUserExists, logoutUser, updateUser
+  checkUserExists, logoutUser, updateUser, updateUserAvatar
 }
