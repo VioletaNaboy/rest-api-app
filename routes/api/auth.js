@@ -10,7 +10,7 @@ router.post('/login', checkUserLogin(userSchema), login);
 
 router.get('/current', protect, getCurrent)
 
-route.patch('/avatars', protect, uploadUserAvatar, updateAvatar)
+router.patch('/avatars', protect, uploadUserAvatar, updateAvatar)
 
 router.post('/logout', protect, logout)
 

@@ -40,7 +40,10 @@ const getCurrent = async (req, res, next) => {
 const updateAvatar = async (req, res, next) => {
     try {
       const updatedUser = await updateUserAvatar(req.body, req.user, req.file);
-      res.status(200).json(updatedUser);
+      if (!updateUser) {
+        throw HttpError(401, 'Not authorized');
+      }
+      res.status(200).json({ avatarURL: updatedUser.avatarURL });
     } catch (error) {
         next(error);
     }

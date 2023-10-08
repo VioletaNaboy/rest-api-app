@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { HttpError } = require('../errorshandlers/index');
 const { signToken } = require('./jwtService');
 const { userSchema } = require('../schemas/auth');
+const ImageService = require('./imagesService');
 
 const listContacts = async (userId) => {
   const contacts = await Contact.find({ owner: userId });
@@ -80,11 +81,9 @@ return User.findByIdAndUpdate(id, { subscription }, { new: true });
 
 const updateUserAvatar = async (userData, user, file) => {
   if (file) {
-   user.avatar = file.path.replace('public/avatar', '')
+    user.avatarURL = await ImageService.save(file, {}, 'public', 'avatars')
   }
-  
   Object.keys(userData).forEach((key) => { user[key] = userData[key] });
-  
   return user.save();
 }
 
