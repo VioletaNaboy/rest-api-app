@@ -28,7 +28,7 @@ const multerFilter = (req, file, cbk) => {
       }
 
     static async save(file, options, ...pathSegments) {
-        if (file.size > (options?.maxSize || 1 * 1024 * 1024)) throw new HttpError(400, 'File is too big');
+        if (file.size > (options?.maxSize ? options.maxSize  * 1024 * 1024 : 1 * 1024 * 1024)) throw new HttpError(400, 'File is too big');
         const tempFilePath = file.path;
         const fullAvatarPath = path.join(process.cwd(), ...pathSegments, file.filename);
         const avatar = await Jimp.read(tempFilePath);
