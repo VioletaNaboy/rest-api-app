@@ -80,6 +80,9 @@ return User.findByIdAndUpdate(id, { subscription }, { new: true });
 }
 
 const updateUserAvatar = async (userData, user, file) => {
+  if (!file) {
+   throw HttpError(400, "No file chosen"); 
+  }
   if (file) {
     user.avatarURL = await ImageService.save(file, {}, 'public', 'avatars')
   }
