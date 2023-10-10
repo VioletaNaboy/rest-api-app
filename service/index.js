@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { HttpError } = require('../errorshandlers/index');
 const { signToken } = require('./jwtService');
 const { userSchema } = require('../schemas/auth');
+const ImageService = require('./imagesService');
 
 const listContacts = async (userId) => {
   const contacts = await Contact.find({ owner: userId });
@@ -78,6 +79,17 @@ const updateUser = async (id, subscription) => {
 return User.findByIdAndUpdate(id, { subscription }, { new: true });
 }
 
+const updateUserAvatar = async (userData, user, file) => {
+  if (!file) {
+   throw HttpError(400, "No file chosen"); 
+  }
+  if (file) {
+    user.avatarURL = await ImageService.save(file, {}, 'public', 'avatars')
+  }
+  Object.keys(userData).forEach((key) => { user[key] = userData[key] });
+  return user.save();
+}
+
 module.exports = {
   listContacts,
   getContactById,
@@ -87,5 +99,5 @@ module.exports = {
   updateStatusContact,
   signupUser,
   loginUser,
-  checkUserExists, logoutUser, updateUser
+  checkUserExists, logoutUser, updateUser, updateUserAvatar
 }

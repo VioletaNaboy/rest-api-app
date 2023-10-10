@@ -1,5 +1,8 @@
 const { HttpError } = require('../errorshandlers/index');
-const {checkUserExists} = require('../service/index')
+const ImageService = require('../service/imagesService');
+const { checkUserExists } = require('../service/index');
+const multer = require('multer');
+const nanoid = require('nanoid');
 
 const checkUser = schema => {
     const f = async (req, res, next) => {
@@ -43,4 +46,6 @@ const checkUserLogin = schema => {
     };
     return f;
 };
-module.exports = { checkUser, checkUserLogin };
+
+const uploadUserAvatar = ImageService.initUploadMiddleware('avatar');
+module.exports = { checkUser, checkUserLogin, uploadUserAvatar };

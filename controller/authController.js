@@ -1,4 +1,4 @@
-const { signupUser, loginUser, logoutUser, updateUser } = require('../service/index');
+const { signupUser, loginUser, logoutUser, updateUser, updateUserAvatar } = require('../service/index');
 const signup = async (req, res, next) => {
     try {
       const user = await signupUser(req.body);
@@ -37,6 +37,19 @@ const getCurrent = async (req, res, next) => {
     }
 }
 
+const updateAvatar = async (req, res, next) => {
+    try {
+      const updatedUser = await updateUserAvatar(req.body, req.user, req.file);
+      if (!updateUser) {
+        throw HttpError(401, 'Not authorized');
+      }
+      res.status(200).json({ avatarURL: updatedUser.avatarURL });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 const logout = async (req, res, next) => {
     try {
       const { id } = req.user;
@@ -66,4 +79,4 @@ const user = await updateUser(id, subscription);
     next(error);
   }
 }
-module.exports = { login, signup, getCurrent, logout, updateUserSubscription }
+module.exports = { login, signup, getCurrent, logout, updateUserSubscription, updateAvatar }
