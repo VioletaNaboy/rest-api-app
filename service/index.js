@@ -5,6 +5,8 @@ const { HttpError } = require('../errorshandlers/index');
 const { signToken } = require('./jwtService');
 const { userSchema } = require('../schemas/auth');
 const ImageService = require('./imagesService');
+const EmailService = require('./mailService')
+const { nanoid } = require('nanoid');
 
 const listContacts = async (userId) => {
   const contacts = await Contact.find({ owner: userId });
@@ -55,9 +57,20 @@ const checkUserExists =  (email) => User.findOne(email);
 
 const signupUser = async (userData) => {
   const hashedPassword = await bcrypt.hash(userData.password, 10)
-  const newUser = await User.create({...userData, password: hashedPassword});
+  const tokenVerification = await nanoid();
+  const newUser = await User.create({ ...userData, password: hashedPassword, verificationToken: tokenVerification });
+  const url = `http://localhost:${process.env.PORT}/users/verify/${tokenVerification}`;
+  await new EmailService(newUser.email, url).verifyEmail();
   return newUser;
 }
+
+const verifyUser = async (data) => {
+  const user = await User.findOneAndUpdate({ verificationToken: data },{$set:{ verify: true, verificationToken: null }} );
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+}
+
 
 const loginUser = async (userData) => {
   const user = await User.findOne({ email: userData.email }).select('+password');
@@ -98,6 +111,7 @@ module.exports = {
   updateContact,
   updateStatusContact,
   signupUser,
+  verifyUser,
   loginUser,
   checkUserExists, logoutUser, updateUser, updateUserAvatar
 }
