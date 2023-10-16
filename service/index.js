@@ -57,7 +57,7 @@ const checkUserExists =  (email) => User.findOne(email);
 
 const signupUser = async (userData) => {
   const hashedPassword = await bcrypt.hash(userData.password, 10)
-  const tokenVerification = await nanoid();
+  const tokenVerification = nanoid();
   const newUser = await User.create({ ...userData, password: hashedPassword, verificationToken: tokenVerification });
   const url = `http://localhost:${process.env.PORT}/users/verify/${tokenVerification}`;
   await new EmailService(newUser.email, url).verifyEmail();
