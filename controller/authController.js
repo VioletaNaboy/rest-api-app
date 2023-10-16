@@ -1,4 +1,4 @@
-const { signupUser, verifyUser, loginUser, logoutUser, updateUser, updateUserAvatar, checkUserExists } = require('../service/index');
+const { signupUser, verifyUser, loginUser, logoutUser, updateUser, updateUserAvatar, checkUserExists, sentEmail } = require('../service/index');
 const signup = async (req, res, next) => {
     try {
       const user = await signupUser(req.body);
@@ -38,7 +38,7 @@ const verifyEmail = async (req, res, next) => {
 const verifyEmailRequest = async (req, res, next) => {
   try {
     const user = await checkUserExists({ email: req.body.email });
-    const verification = await verifyUser(user.verificationToken);
+    const success = await sentEmail(user.email, user.verificationToken);
         return res.status(200).json({
     message: 'Verification email sent',
   });

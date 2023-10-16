@@ -64,6 +64,12 @@ const signupUser = async (userData) => {
   return newUser;
 }
 
+const sentEmail = async (email, tokenVerification) => {
+   const url = `http://localhost:${process.env.PORT}/users/verify/${tokenVerification}`;
+  const success = await new EmailService(email, url).verifyEmail();
+  return success;
+}
+
 const verifyUser = async (data) => {
   const user = await User.findOneAndUpdate({ verificationToken: data },{$set:{ verify: true, verificationToken: null }} );
   if (!user) {
@@ -111,6 +117,7 @@ module.exports = {
   updateContact,
   updateStatusContact,
   signupUser,
+  sentEmail,
   verifyUser,
   loginUser,
   checkUserExists, logoutUser, updateUser, updateUserAvatar

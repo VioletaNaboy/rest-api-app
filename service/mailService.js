@@ -33,7 +33,7 @@ class EmailService {
            .catch(err => console.log(err));;   
     }
     async verifyEmail() {
-        await this._send('Verify email', `Hi! Follow the link ${this.url} to verify your email :)`)
+        await this._send('Verify email', `Hi! Click the link ${this.url} to verify your email :)`)
     }
 }
 
