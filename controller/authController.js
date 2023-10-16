@@ -1,4 +1,4 @@
-const { signupUser, loginUser, logoutUser, updateUser, updateUserAvatar } = require('../service/index');
+const { signupUser, verifyUser, loginUser, logoutUser, updateUser, updateUserAvatar, checkUserExists, sentEmail } = require('../service/index');
 const signup = async (req, res, next) => {
     try {
       const user = await signupUser(req.body);
@@ -10,8 +10,7 @@ const signup = async (req, res, next) => {
   });
   } catch (error) {
     next(error)
-  }
-  
+  } 
 }
 const login = async (req, res, next) => {
     try {
@@ -23,6 +22,29 @@ const login = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+}
+
+const verifyEmail = async (req, res, next) => {
+  try {
+      const user = await verifyUser(req.params.verificationToken);
+        return res.status(200).json({
+    message: 'Verification successful',
+  });
+  } catch (error) {
+    next(error)
+  } 
+}
+
+const verifyEmailRequest = async (req, res, next) => {
+  try {
+    const user = await checkUserExists({ email: req.body.email });
+    const success = await sentEmail(user.email, user.verificationToken);
+        return res.status(200).json({
+    message: 'Verification email sent',
+  });
+  } catch (error) {
+    next(error)
+  } 
 }
 
 const getCurrent = async (req, res, next) => {
@@ -79,4 +101,4 @@ const user = await updateUser(id, subscription);
     next(error);
   }
 }
-module.exports = { login, signup, getCurrent, logout, updateUserSubscription, updateAvatar }
+module.exports = { login, signup, verifyEmail, verifyEmailRequest, getCurrent, logout, updateUserSubscription, updateAvatar }

@@ -15,6 +15,16 @@ const userSchema = Joi.object({
     }),
 });
 
+const userVerifySchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required()
+    .messages({
+      "string.email": "wrong email format",
+      "any.required": "missing email",
+    }),
+});
+
 const updateSubscriptionSchema = Joi.object({
   subscription: Joi.string()
     .valid(...Object.values(["starter", "pro", "business"])) 
@@ -26,5 +36,5 @@ const updateSubscriptionSchema = Joi.object({
 
 
 module.exports = {
- userSchema, updateSubscriptionSchema
+ userSchema, updateSubscriptionSchema, userVerifySchema
 }
